@@ -1,22 +1,11 @@
-// ============================================================
-//  app.js  —  Migrated from script.js
-//  Replaced localStorage auth with real backend API (JWT)
-//  Backend: http://localhost:3000
-// ============================================================
-
 const API = 'http://localhost:3000';
 let currentUser = null;
 
-// ── HELPER: Get JWT auth header ─────────────────────────────
 function getAuthHeader() {
   const token = sessionStorage.getItem('authToken');
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-
-// ============================================================
-//  ROUTING (unchanged from script.js)
-// ============================================================
 function handleRouting() {
   const hash  = window.location.hash || '#/home';
   const route = hash.replace('#/', '');
@@ -54,12 +43,6 @@ function handleRouting() {
 window.addEventListener('hashchange', handleRouting);
 window.addEventListener('load', handleRouting);
 
-
-// ============================================================
-//  INITIALIZATION
-//  ✅ Now checks sessionStorage + verifies token with backend
-//     instead of checking localStorage
-// ============================================================
 window.addEventListener('load', async () => {
   const token = sessionStorage.getItem('authToken');
 
@@ -85,11 +68,6 @@ window.addEventListener('load', async () => {
   handleRouting();
 });
 
-
-// ============================================================
-//  REGISTER
-//  ✅ Now calls POST /api/register instead of saving to localStorage
-// ============================================================
 async function register() {
   const firstName = document.getElementById('regFirstName').value.trim();
   const lastName  = document.getElementById('regLastName').value.trim();
@@ -126,10 +104,6 @@ async function register() {
   }
 }
 
-
-// ============================================================
-//  EMAIL VERIFICATION (kept for UI compatibility)
-// ============================================================
 function simVerification() {
   showToast('Email verified! You can now log in.');
   window.location.hash = '#/login';
@@ -140,11 +114,6 @@ function showVerifyEmail() {
   if (display) display.textContent = 'Check your email to verify your account.';
 }
 
-
-// ============================================================
-//  LOGIN
-//  ✅ Now calls POST /api/login instead of checking localStorage
-// ============================================================
 async function loginUser() {
   const email    = document.getElementById('loginEmail').value.trim().toLowerCase();
   const password = document.getElementById('loginPassword').value;
@@ -171,10 +140,6 @@ async function loginUser() {
   }
 }
 
-
-// ============================================================
-//  AUTHENTICATION STATE (unchanged from script.js)
-// ============================================================
 function setAuthState(isAuth, user = null) {
   currentUser = isAuth ? user : null;
 
@@ -213,10 +178,6 @@ function validateInput(input, condition) {
 }
 
 
-// ============================================================
-//  LOGOUT
-//  ✅ Now clears sessionStorage instead of localStorage
-// ============================================================
 function logout() {
   sessionStorage.removeItem('authToken');
 
@@ -254,9 +215,6 @@ document.getElementById('userLogoutLink')?.addEventListener('click', e => {
 });
 
 
-// ============================================================
-//  PROFILE (unchanged from script.js)
-// ============================================================
 function renderProfile() {
   if (!currentUser) return;
 
@@ -273,9 +231,6 @@ function renderProfile() {
 }
 
 
-// ============================================================
-//  ACCOUNTS (unchanged from script.js)
-// ============================================================
 function renderAccountsList() {
   const tbody = document.getElementById('accountsTableBody');
   if (!tbody || !window.db) return;
@@ -390,10 +345,6 @@ function deleteAccount(index) {
   renderAccountsList();
 }
 
-
-// ============================================================
-//  EMPLOYEES & DEPARTMENTS (unchanged from script.js)
-// ============================================================
 function renderEmployeesTable() {
   const tbody = document.getElementById('employeesTableBody');
   if (!tbody) return;
@@ -458,10 +409,6 @@ function renderDepartmentsTable() {
   document.getElementById('addDepartmentBtn')?.classList.toggle('d-none', !currentUser || currentUser.role !== 'admin');
 }
 
-
-// ============================================================
-//  REQUESTS (unchanged from script.js)
-// ============================================================
 function renderRequestsTable() {
   if (!currentUser) return;
   const tbody = document.getElementById('userRequestsTableBody');
@@ -568,10 +515,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-
-// ============================================================
-//  UTILITIES (unchanged from script.js)
-// ============================================================
 function getStatusBadge(status) {
   if (status === "Pending")  return '<span style="color:orange;">Pending</span>';
   if (status === "Approved") return '<span style="color:green;">Approved</span>';
